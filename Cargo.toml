@@ -1,0 +1,11 @@
+[package]
+name = "rmir"
+version = "0.1.0"
+edition = "2021"
+authors = ["roxy"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+handlebars = "4.3.0"
+serde_json = "1.0.81"
