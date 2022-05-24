@@ -2,11 +2,11 @@ use crate::{utils, env::Env, val::Val};
 
 #[derive(Debug, PartialEq)]
 pub struct BindingUsage {
-    name: String,
+    pub(crate) name: String,
 }
 
 impl BindingUsage {
-    fn new(s: &str) -> Result<(&str, Self), String> {
+    pub(crate) fn new(s: &str) -> Result<(&str, Self), String> {
         let (s, name) = utils::extract_ident(s)?;
         Ok((
             s,

@@ -7,7 +7,7 @@ pub struct Block {
 }
 
 impl Block {
-    fn new(s: &str) -> Result<(&str, Block), String> {
+    pub(crate) fn new(s: &str) -> Result<(&str, Block), String> {
         let s = utils::tag("{", s)?;
         let (s, _) = utils::extract_whitespace(s);
         let (s, stmts) = if let Ok((s, stmt)) = Stmt::new(s) {
@@ -25,7 +25,8 @@ impl Block {
 mod tests {
     use super::*;
     use crate::binding_def::BindingDef;
-    use crate::expr::{Expr, Number};
+    use super::super::binding_usage::BindingUsage;
+    use super::super::{Expr, Number};
 
     #[test]
     fn parse_empty_block() {
@@ -72,9 +73,13 @@ mod tests {
                         }),
                         Stmt::BindingDef(BindingDef {
                             name: "b".to_string(),
-                            val: ?, // what do we put here?
+                            val: Expr::BindingUsage(BindingUsage {
+                                name: "a".to_string(),
+                            }),
                         }),
-                        Stmt::Expr(?), // and here?
+                        Stmt::Expr(Expr::BindingUsage(BindingUsage {
+                            name: "b".to_string(),
+                        })),
                     ],
                 },
             )),
