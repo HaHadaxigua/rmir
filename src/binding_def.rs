@@ -3,8 +3,8 @@ use crate::{utils, env::Env};
 
 #[derive(Debug, PartialEq)]
 pub struct BindingDef {
-    name: String,
-    val: Expr,
+    pub name: String,
+    pub val: Expr,
 }
 
 impl BindingDef {
