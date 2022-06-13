@@ -1,24 +1,31 @@
 use std::fmt::{Display, Debug, Formatter};
 use std::io::Read;                                                                                                                                                                                                                                                                                                      ` =
 use std::path::Path;
-use std::rc::{Rc, Weak};
-use std::cell::{Ref, RefCell};
-
-use crate::spec::spec::Spec;
 
 #[allow(dead_code)]
 #[derive(Debug)]
-struct SpecTree {
-    spec: Spec,
-    data: Option<NodeData>,
-    path: Box<Path>,
+struct Tree {
+    node: Node,
+    children: Option<Box<Vec<Tree>>>,
+    parent: Option<Tree>,
+}
+
+enum Node {
+    SpecDir(NodeDesc),
+    NormalDir(NodeDesc),
+    NormalFile(NodeDesc, Option<NodeData>),
+    GlobalDir(NodeDesc),
+    GlobalModule(NodeDesc, Option<NodeData::Yaml>),
+    ModuleDir(NodeDesc),
+    ModuleFile(NodeDesc, Option<NodeData::Yaml>),
+    ProfileDir(NodeDesc),
+    Profile(NodeDesc, Option<NodeData::Yaml>),
+}
+
+struct NodeDesc {
+    path: Path,
     name: String,
-    kind: usize,
-    is_dir: bool,
-    level: isize,
-    children: Option<Box<Vec<SpecTree>>>,
-    parent: Option<SpecTree>,
-    is_affiliated: bool,
+    level: usize,
 }
 
 enum NodeData {
@@ -29,11 +36,29 @@ enum NodeData {
 }
 
 #[allow(dead_code)]
-impl SpecTree {
-    fn build_root_node(specDir: &Path) -> Result<SpecTree, String> {
-        if specDir.exists() && specDir.is_dir() {};
+impl Tree {
+    fn new(spec_dir: &Path) -> Result<Tree, String> {
+        if !spec_dir.exists() || !spec_dir.is_dir() {
+            return Err(String::from("invalid spec dir"));
+        };
 
-        Err("cannot build root node".to_string())
+
+        fn parse(node: &Tree, path: &Path, level: usize) -> Result<(), String> {
+            if !path.is_dir() {
+                return Err(String::from("parse need a direct instead of file"));
+            }
+
+            let entries = match path.read_dir() {
+                Ok(entries) => {
+                    entries
+                }
+                Err(e) => return Err(e.to_string()),
+            };
+
+            for entry in entries {
+
+            }
+        }
     }
 }
 
